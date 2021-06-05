@@ -1,0 +1,14 @@
+.cell {
+    width: 30px;
+    height: 30px;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.cell-red { background-color: red; }
+.cell-orange { background-color: orange; }
+.cell-yellow { background-color: yellow; }
+.cell-green { background-color: green; }
+.cell-blue { background-color: blue; }
+.cell-purple { background-color: purple; }

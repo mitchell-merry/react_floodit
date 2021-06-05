@@ -1,0 +1,15 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.board {
+    border: 1px solid black;
+}
+
+.row {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
