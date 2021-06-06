@@ -67,7 +67,6 @@ body {
 
 .moveBarCellActive {
   background-color: lime;
-  border: 1px solid black;
 }
 
 .moveBarText {

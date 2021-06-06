@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <title>Diggity's Games</title>
+  </head>
+  <body class="bg-secondary">
+    <div data-includeHTML="includes/header.html"></div>
+		<canvas id="gc" class="canvas" width="720" height="720"></canvas>
+		<script type="text/javascript">
+
+			window.onload=function()
+			{
+				canvas=document.getElementById("gc");
+				ctx=canvas.getContext("2d");
+				document.addEventListener("keydown",keyPush);
+				document.addEventListener("mousedown",mouseClicked);
+				reset();
+
+				// initialising variables
+				tileSize = 540 / gridSize;
+				resetButtonOffsetX = gridSize*tileSize + gridOffset + moveCounterOffset+moveCounterWidth - resetButtonWidth;
+				moveCounterHeight = gridSize*tileSize;
+				pallateY = gridOffset + (gridSize*tileSize) + resetButtonOffsetY;
+
+				setInterval(game, 1000/100);
+			}
+
+			// grid
+			var tiles = [];
+			var colours = ["red","orange","yellow","green","blue"];
+			var gridSize = 20;
+			var tileSize = 15; // gets replaced.
+			var gridOffset = 20;
+
+			// move counter
+			var moveLimit = 30;
+			var moveCurrent = 0;
+			var moveCounterWidth = 50;
+			var moveCounterHeight = 540; // gets replaced.
+			var moveCounterOffset = 30;
+
+			// reset button
+			var resetButtonWidth = 250;
+			var resetButtonHeight = 50;
+			var resetButtonBorder = "white";
+			var resetButtonBG = "gray";
+			var resetButtonOffsetX = 400; // gets replaced.
+			var resetButtonOffsetY = 20;
+			var resetButtonFont = "35px Helvetica";
+
+			// colour pallate
+			var pallateBoxSize = 50;
+			var pallateBorderSize = 5;
+			var pallateBorderColour = "darkgray";
+			var pallateWidth = colours.length*(pallateBoxSize + pallateBorderSize) + pallateBorderSize;
+			var pallateHeight = pallateBoxSize + pallateBorderSize*2;
+			var pallateOffsetX = 20;
+			var pallateX = gridOffset + pallateOffsetX;
+			var pallateY = gridOffset + (gridSize*tileSize) + resetButtonOffsetY;
+
+			var currentColour=0;
+
+			var gameWin=false;
+
+			function game()
+			{
+				ctx.fillStyle="black";
+				ctx.fillRect(gridOffset-1, gridOffset-1, gridSize*tileSize+2, gridSize*tileSize+2);
+
+
+				for(var x=0; x<gridSize; x++)
+				{
+					for(var y=0; y<gridSize; y++)
+					{
+						ctx.fillStyle=colours[tiles[x][y]];
+						ctx.fillRect(gridOffset + x*tileSize, gridOffset + y*tileSize, tileSize,tileSize);
+					}
+				}
+
+				ctx.fillStyle="black";
+				ctx.fillRect(gridOffset + gridSize*tileSize + moveCounterOffset-1, gridOffset-1, moveCounterWidth+2, moveCounterHeight+2);
+
+				ctx.fillStyle="limegreen";
+				ctx.fillRect(gridOffset + gridSize*tileSize + moveCounterOffset, gridOffset + moveCurrent*moveCounterHeight/moveLimit, moveCounterWidth, moveCounterHeight-moveCurrent*moveCounterHeight/moveLimit);
+
+				ctx.fillStyle=resetButtonBorder;
+				ctx.font=resetButtonFont;
+				var x = 5;
+				var y = 30;
+				if((moveLimit - moveCurrent) < 2) y = -3;
+				if((moveLimit - moveCurrent) < 10) x = 14;
+				ctx.fillText("" + moveLimit - moveCurrent, gridOffset + gridSize*tileSize + moveCounterOffset + x, gridOffset + moveCurrent*moveCounterHeight/moveLimit + y);
+
+				ctx.fillStyle=resetButtonBorder;
+				ctx.fillRect(resetButtonOffsetX-1, resetButtonOffsetY+gridSize*tileSize+resetButtonOffsetY-1, resetButtonWidth+2, resetButtonHeight+2);
+
+				ctx.fillStyle=resetButtonBG;
+				ctx.fillRect(resetButtonOffsetX+1, resetButtonOffsetY+gridSize*tileSize+resetButtonOffsetY+1, resetButtonWidth-2, resetButtonHeight-2);
+
+				ctx.fillStyle=resetButtonBorder;
+				ctx.font=resetButtonFont;
+				ctx.fillText("RESET", resetButtonOffsetX + resetButtonWidth/2 - 60, gridOffset+gridSize*tileSize+resetButtonOffsetY+35);
+
+				ctx.fillStyle=pallateBorderColour;
+				ctx.fillRect(pallateX, pallateY, pallateWidth, pallateHeight);
+
+				for(var i=0; i<colours.length; i++)
+				{
+					ctx.fillStyle=colours[i];
+					ctx.fillRect(pallateX + (pallateBoxSize + pallateBorderSize) * i + pallateBorderSize, pallateY + pallateBorderSize, pallateBoxSize, pallateBoxSize);
+					if(currentColour == i)
+					{
+						ctx.fillStyle="white";
+						ctx.fillRect(pallateX + (pallateBoxSize + pallateBorderSize) * i + pallateBorderSize + pallateBoxSize/4, pallateY + pallateBorderSize + pallateBoxSize/4, pallateBoxSize/2, pallateBoxSize/2);
+					}
+				}
+			}
+
+			function keyPush()
+			{
+
+			}
+
+			function mouseClicked()
+			{
+				var x = event.clientX;
+				var y = event.clientY;
+
+				for(var i=0; i<colours.length; i++)
+				{
+					if(y>pallateY+pallateBorderSize && y<pallateY+pallateHeight)
+					{
+						boxX = pallateX+pallateBorderSize+i*(pallateBoxSize+pallateBorderSize);
+						if(x>boxX&&x<boxX+pallateBoxSize)
+						{
+							currentColour=i;
+						}
+					}
+				}
+
+				if(moveCurrent!=moveLimit&&!gameWin)
+				{
+
+					if(x>gridOffset && x<gridOffset+gridSize*tileSize && y > gridOffset && y <gridOffset+gridSize*tileSize)
+					{
+						var gridX = x - gridOffset;
+						var gridY = y - gridOffset;
+						var tileX = Math.floor(gridX / tileSize);
+						var tileY = Math.floor(gridY / tileSize);
+						if(tiles[tileX][tileY]!=currentColour)
+						{
+							floodFill(tileX, tileY, tiles[tileX][tileY]);
+							moveCurrent++;
+						}
+					}
+				}
+
+				if(x>resetButtonOffsetX-1&&x<resetButtonOffsetX+resetButtonWidth+1&&y>resetButtonOffsetY+gridSize*tileSize+resetButtonOffsetY-1&&y<resetButtonOffsetY+gridSize*tileSize+resetButtonOffsetY-1+resetButtonHeight+1)
+				{
+					reset();
+				}
+			}
+
+			function floodFill(x, y, initialColour)
+			{
+				try
+				{
+					if(tiles[x][y] == initialColour)
+					{
+						tiles[x][y] = currentColour;
+						floodFill(x-1, y, initialColour);
+						floodFill(x, y-1, initialColour);
+						floodFill(x+1, y, initialColour);
+						floodFill(x, y+1, initialColour);
+					}
+				}
+				catch (err) {}
+			}
+
+			function reset()
+			{
+				for(var x=0; x<gridSize; x++)
+				{
+					tiles[x] = [];
+					for(var y=0; y<gridSize; y++)
+					{
+						tiles[x][y] = Math.floor(Math.random() * Math.floor(colours.length));
+					}
+				}
+
+				moveCurrent = 0;
+				currentColour = 0;
+			}
+
+		</script>
+		<script>
+		$(document).ready(function () {
+				$("div[data-includeHTML]").each(function () {
+						$(this).load($(this).attr("data-includeHTML"));
+				});
+		});
+		</script>
+	</body>
+</html>
