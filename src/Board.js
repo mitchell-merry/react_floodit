@@ -1,20 +1,11 @@
 import React, {Component} from "react";
-import './Board.css';
-
-import './Cell.css';
-const colours = [
-    "",
-    "cell-red",
-    "cell-orange",
-    "cell-yellow",
-    "cell-green",
-    "cell-blue",
-    "cell-purple"
-];
+import './App.css';
+import {colours} from "./helper.js";
 
 export default class Board extends Component {
     constructor(props) {
         super(props);
+        this._colourWheel = null;
         this.state = {
             width: props.width,
             height: props.height,
@@ -33,7 +24,7 @@ export default class Board extends Component {
     }
 
     floodFill_(grid, row, col, initialColour, newColour) {
-        grid[row][col].colour = newColour; // TODO colour wheel
+        grid[row][col].colour = newColour;
 
         for(let m = 1; m <= 7; m+=2) {
             let dr = Math.floor(m/3) - 1, dc = m%3 - 1;
@@ -42,11 +33,13 @@ export default class Board extends Component {
     }
 
     floodFill(row, col, initialColour) {
-        let c = Math.floor(Math.random() * 6)+1;
-        if(initialColour !== c) {
+        // let c = Math.floor(Math.random() * 6)+1;
+        let c = this._colourWheel.state.currentColour;
+        if(initialColour !== c && this._moveBar.state.movesLeft != 0) {
             let {grid} = this.state;
             this.floodFill_(grid, row, col, initialColour, c);
-
+            
+            this._moveBar.updateMoves();
             this.setState({grid});
         }
     }
@@ -57,11 +50,19 @@ export default class Board extends Component {
             {grid.map((row, rowInd) => {
                 return (<div key={rowInd} className="row">
                     {row.map((cell, colInd) => {
-                        return <div className={colours[cell.colour] + " cell"} onClick={() => this.floodFill(cell.row, cell.col, cell.colour)} key={cell.row*width+cell.col}/>
+                        return <div className={colours[cell.colour] + " cell"} onMouseDown={() => this.floodFill(cell.row, cell.col, cell.colour)} key={cell.row*width+cell.col}/>
                     })}
                 </div>);
             })}
         </div>);
+    }
+
+    setColourWheel(c) {
+        this._colourWheel = c;
+    }
+
+    setMoveBar(mb) {
+        this._moveBar = mb;
     }
 };
 

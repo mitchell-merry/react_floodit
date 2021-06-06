@@ -1,38 +1,77 @@
-.App {
+body {
+  margin: 0;
+  padding: 0;
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background-color: #2B2B2B;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.board {
+  border: 1px solid black;
+  display: inline-block;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.row {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
+  font-size: 0;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+.red { background-color: red; }
+.orange { background-color: orange; }
+.yellow { background-color: yellow; }
+.green { background-color: green; }
+.blue { background-color: blue; }
+.purple { background-color: purple; }
+
+.colourWheel {
+  margin-top: 30px;
+  display: inline-block;
+}
+
+.colourOption {
+  width: 50px;
+  height: 50px;
+  border: 5px solid gray;
+  display: inline-block;
+}
+
+.colourOptionSel {
+  border: 5px solid white;
+}
+
+.moveBar {
+  border: 5px solid darkgray;
+  display: inline-block;
+  margin-left: 40px;
+}
+
+.moveBarCell {
+  width: 60px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.moveBarCellActive {
+  background-color: lime;
+  border: 1px solid black;
+}
+
+.moveBarText {
+  position: absolute;
+  color: black;
+  font-weight: bold;
 }
