@@ -1,11 +1,13 @@
 import React, {Component} from "react";
 import './App.css';
-import {colours} from "./helper.js";
+import {colours} from './helper.js';
 
 export default class Board extends Component {
     constructor(props) {
         super(props);
         this._colourWheel = null;
+        this._moveBar = null;
+
         this.state = {
             width: props.width,
             height: props.height,
@@ -33,7 +35,6 @@ export default class Board extends Component {
     }
 
     floodFill(row, col, initialColour) {
-        // let c = Math.floor(Math.random() * 6)+1;
         let c = this._colourWheel.state.currentColour;
         if(initialColour !== c && this._moveBar.state.movesLeft != 0) {
             let {grid} = this.state;
@@ -50,7 +51,7 @@ export default class Board extends Component {
             {grid.map((row, rowInd) => {
                 return (<div key={rowInd} className="row">
                     {row.map((cell, colInd) => {
-                        return <div className={colours[cell.colour] + " cell"} onMouseDown={() => this.floodFill(cell.row, cell.col, cell.colour)} key={cell.row*width+cell.col}/>
+                        return <div className={colours[cell.colour] + " cell"} onMouseDown={() => this.floodFill(cell.row, cell.col, cell.colour)} key={cell.row*width+cell.col}/> 
                     })}
                 </div>);
             })}
